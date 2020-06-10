@@ -1,0 +1,108 @@
+version: 2.1
+
+commands:
+  run-sample:
+    description: "Build and run the sample"
+    parameters:
+      sample:
+        type: string
+    steps:
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum  "<<parameters.sample>>/build.gradle" }}
+            - v1-dependencies-
+      - run:
+          name: Assemble
+          working_directory: <<parameters.sample>>
+          command: ./gradlew clean build
+      - save_cache:
+          key: v1-dependencies{{ checksum  "<<parameters.sample>>/build.gradle" }}
+          paths:
+            - ~/.gradle
+
+      # Setup environment, start the app and wait for it to come online
+      - run:
+          name: Replace Auth0 test credentials
+          working_directory: <<parameters.sample>>/src/main/resources/
+          command: |
+            mv application.yml.example application.yml
+            sed -i 's/{CLIENT_ID}/'$AUTH0_TEST_CLIENT_ID'/g' application.yml
+            sed -i 's/{DOMAIN}/'$AUTH0_TEST_DOMAIN'/g' application.yml
+            sed -i 's/{CLIENT_SECRET}/'$AUTH0_TEST_CLIENT_SECRET'/g' application.yml
+      - run:
+          name: Start server
+          working_directory: <<parameters.sample>>
+          command: ./gradlew bootRun
+          background: true
+      - run:
+          name: Wait until server is online
+          command: |
+            attempt_counter=0
+            max_attempts=15
+            until $(curl --silent --head --output /dev/null --fail http://localhost:3000); do
+                if [ ${attempt_counter} -eq ${max_attempts} ];then
+                  echo "Could not reach server"
+                  exit 1
+                fi
+                attempt_counter=$(($attempt_counter+1))
+                sleep 5
+            done
+
+  run-functional-tests:
+    description: "Run the functional tests"
+    parameters:
+      sample:
+        type: string    
+    steps:
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Run tests
+          command: |
+            docker create --network host --name tester codeception/codeceptjs codeceptjs run-multiple --all --steps --verbose
+            docker cp $(pwd)/lock_login_spa_test.js tester:/tests/lock_login_test.js
+            docker cp $(pwd)/codecept.conf.js tester:/tests/codecept.conf.js
+            docker start -i tester
+          working_directory: test
+      - run:
+          name: Copy test logs
+          command: |
+            mkdir -p /tmp/out
+            docker cp tester:/tests/out /tmp/
+          when: on_fail
+      - store_artifacts:
+          path: /tmp/out
+jobs:
+  checkout:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Clone test script
+          command: git clone https://github.com/auth0-samples/spa-quickstarts-tests test
+      - persist_to_workspace:
+          root: ~/ 
+          paths:
+            - project
+            - test
+  login:  
+    machine: true
+    steps:
+      - run-sample:
+          sample: "mvc-login"
+      - run-functional-tests:
+          sample: "mvc-login"
+
+workflows:
+  version: 2
+  quickstarts_login:
+    jobs:
+      - checkout:
+          context: Quickstart Web App Test
+      - login:
+          context: Quickstart Web App Test
+          requires:
+            - checkout
+         
