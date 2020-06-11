@@ -12,7 +12,7 @@ This sample demonstrates:
 1. On the [Auth0 Dashboard](https://manage.auth0.com/#/clients) create a new Application of type **Regular Web Application**.
 1. On the **Settings** tab of your application, add the URL `http://localhost:3000/login/oauth2/code/auth0` to the **Allowed Callback URLs** field.
 1. On the **Settings** tab of your application, add the URL `http://localhost:3000/` to the **Allowed Logout URLs** field.
-1. Copy the `Domain`, `Client ID` and `Client Secret` values at the top of the page and use them to configure the Spring Boot application.
+1. Save the changes to your application settings. Don't close this page; you'll need some of the settings when configuring the application below.
 
 ### Application configuration
 
