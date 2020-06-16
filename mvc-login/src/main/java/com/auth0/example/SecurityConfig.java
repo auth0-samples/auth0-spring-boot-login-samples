@@ -16,13 +16,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .mvcMatchers("/", "/images/**").permitAll()
-                .anyRequest().authenticated()
-            .and().oauth2Login()
-            .and().logout()
-                .logoutSuccessUrl("/")
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .addLogoutHandler(logoutHandler);
+       http.authorizeRequests()
+               .mvcMatchers("/", "/images/**").permitAll()
+               .anyRequest().authenticated()
+           .and().oauth2Login()
+           .and().logout()
+               .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+               .addLogoutHandler(logoutHandler);
     }
 }
