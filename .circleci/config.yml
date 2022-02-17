@@ -1,5 +1,8 @@
 version: 2.1
-
+parameters:
+  machine_image:
+    type: string
+    default: ubuntu-2004:202201-02
 commands:
   run-sample:
     description: "Build and run the sample"
@@ -76,7 +79,8 @@ commands:
           path: /tmp/out
 jobs:
   checkout:
-    machine: true
+    machine:
+      image: << pipeline.parameters.machine_image >>
     steps:
       - checkout
       - run:
@@ -88,7 +92,8 @@ jobs:
             - project
             - test
   login:  
-    machine: true
+    machine:
+      image: << pipeline.parameters.machine_image >>
     steps:
       - run-sample:
           sample: "mvc-login"
