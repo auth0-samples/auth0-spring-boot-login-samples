@@ -2,8 +2,10 @@ package com.auth0.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
@@ -30,10 +32,17 @@ public class ProfileController {
 
     private String claimsToJson(Map<String, Object> claims) {
         try {
-            return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(claims);
+            return objectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(claims);
         } catch (JsonProcessingException jpe) {
             log.error("Error parsing claims to JSON", jpe);
         }
         return "Error parsing claims to JSON.";
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        JavaTimeModule module = new JavaTimeModule();
+        return new ObjectMapper()
+                .registerModule(module);
     }
 }
