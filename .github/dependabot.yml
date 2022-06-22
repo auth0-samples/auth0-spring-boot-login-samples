@@ -1,16 +1,18 @@
 version: 2
 updates:
+
   - package-ecosystem: "gradle" 
     directory: "/mvc-login" 
     schedule:
       interval: "daily"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+        update-types: ["version-update:semver-major" "version-update:semver-patch"]
+        
   - package-ecosystem: "gradle" 
     directory: "/webflux-login" 
     schedule:
       interval: "daily"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+        update-types: ["version-update:semver-major" "version-update:semver-patch"]
