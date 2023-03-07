@@ -1,10 +1,14 @@
-# Spring Boot 2 Login - WebFlux
+# Spring Boot 3 Login - WebFlux
 
 This sample demonstrates:
 
-- Adding authentication with Auth0 to a Spring Boot 2 WebFlux application
+- Adding authentication with Auth0 to a Spring Boot 3 WebFlux application
 - Accessing profile information of the authenticated user
 - Only allowing authenticated users to access certain resources
+
+## Requirements
+
+- Java 17
 
 ## Configuration
 

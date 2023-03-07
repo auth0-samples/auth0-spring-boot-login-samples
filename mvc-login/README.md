@@ -1,10 +1,14 @@
-# Spring Boot 2 Login - MVC
+# Spring Boot 3 Login - MVC
 
 This sample demonstrates:
 
-- Adding authentication with Auth0 to a Spring Boot 2 MVC application
+- Adding authentication with Auth0 to a Spring Boot 3 MVC application
 - Accessing profile information of the authenticated user
 - Only allowing authenticated users to access certain resources
+
+## Requirements
+
+- Java 17
 
 ## Configuration
 

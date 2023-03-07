@@ -1,4 +1,4 @@
-# Spring Boot 2 Login Samples
+# Spring Boot 3 Login Samples
 
 [![CircleCI](https://circleci.com/gh/auth0-samples/auth0-spring-boot-login-samples.svg?style=svg)](https://circleci.com/gh/auth0-samples/auth0-spring-boot-login-samples)
 
