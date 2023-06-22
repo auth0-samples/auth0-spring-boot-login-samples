@@ -64,7 +64,7 @@ commands:
       - run:
           name: Run tests
           command: |
-            docker create --network host --name tester codeception/codeceptjs codeceptjs run-multiple --all --steps --verbose
+            docker create --network host --name tester codeceptjs/codeceptjs codeceptjs run-multiple --all --steps --verbose
             docker cp $(pwd)/lock_login_spa_test.js tester:/tests/lock_login_test.js
             docker cp $(pwd)/codecept.conf.js tester:/tests/codecept.conf.js
             docker start -i tester
@@ -85,7 +85,7 @@ jobs:
       - checkout
       - run:
           name: Clone test script
-          command: git clone https://github.com/auth0-samples/spa-quickstarts-tests test
+          command: git clone --branch chore/update-deps https://github.com/auth0-samples/spa-quickstarts-tests test
       - persist_to_workspace:
           root: ~/ 
           paths:
