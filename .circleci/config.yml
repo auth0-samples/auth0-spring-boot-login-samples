@@ -85,7 +85,7 @@ jobs:
       - checkout
       - run:
           name: Clone test script
-          command: git clone --branch chore/update-deps https://github.com/auth0-samples/spa-quickstarts-tests test
+          command: git clone https://github.com/auth0-samples/spa-quickstarts-tests test
       - persist_to_workspace:
           root: ~/ 
           paths:
