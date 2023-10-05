@@ -2,6 +2,7 @@ package com.auth0.example;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -11,29 +12,30 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 /**
  * Configures the application's security settings
  */
+@Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
-    private final String issuer;
-    private final String clientId;
-
-    public SecurityConfig(@Value("${spring.security.oauth2.client.provider.auth0.issuer-uri}") String issuer,
-                          @Value("${spring.security.oauth2.client.registration.auth0.client-id}") String clientId) {
-        this.issuer = issuer;
-        this.clientId = clientId;
-    }
+    @Value("${okta.oauth2.issuer}")
+    private String issuer;
+    @Value("${okta.oauth2.client-id}")
+    private String clientId;
 
     @Bean
-    public SecurityWebFilterChain configure(ServerHttpSecurity http) throws Exception {
-        return http.authorizeExchange()
-            .pathMatchers("/", "/images/**").permitAll()
-            .anyExchange().authenticated()
-            .and().oauth2Login()
-            .and().logout().logoutSuccessHandler(logoutSuccessHandler())
-            .and().build();
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http.authorizeExchange(authorize -> {
+                    authorize.pathMatchers("/", "/images/**").permitAll();
+                    authorize.anyExchange().authenticated();
+                })
+            .oauth2Login(withDefaults())
+            .logout(logout ->
+                logout.logoutSuccessHandler(logoutSuccessHandler())
+            ).build();
     }
 
     /**

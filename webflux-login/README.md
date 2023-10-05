@@ -1,10 +1,14 @@
-# Spring Boot 2 Login - WebFlux
+# Spring Boot Login - WebFlux
 
 This sample demonstrates:
 
-- Adding authentication with Auth0 to a Spring Boot 2 WebFlux application
+- Adding authentication with Auth0 using the [Okta Spring Boot Starter](https://github.com/okta/okta-spring-boot) to a Spring Boot WebFlux application
 - Accessing profile information of the authenticated user
 - Only allowing authenticated users to access certain resources
+
+## Requirements
+
+- Java 17
 
 ## Configuration
 
