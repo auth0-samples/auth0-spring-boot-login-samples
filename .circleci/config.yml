@@ -1,12 +1,8 @@
 version: 2.1
 parameters:
-  machine_image:
+  docker_image:
     type: string
-    default: ubuntu-2004:202201-02
-executors:
-  java17:
-    docker:
-      - image: 'cimg/openjdk:17.0.8'
+    default: 'cimg/openjdk:17.0.8'
 commands:
   run-sample:
     description: "Build and run the sample"
@@ -24,7 +20,6 @@ commands:
           name: Assemble
           working_directory: <<parameters.sample>>
           command: ./gradlew clean build
-          executor: java17
       - save_cache:
           key: v1-dependencies{{ checksum  "<<parameters.sample>>/build.gradle" }}
           paths:
@@ -44,7 +39,6 @@ commands:
           working_directory: <<parameters.sample>>
           command: ./gradlew bootRun
           background: true
-          executor: java17
       - run:
           name: Wait until server is online
           command: |
@@ -85,8 +79,8 @@ commands:
           path: /tmp/out
 jobs:
   checkout:
-    machine:
-      image: << pipeline.parameters.machine_image >>
+    docker:
+      image: << pipeline.parameters.docker_image >>
     steps:
       - checkout
       - run:
@@ -98,8 +92,8 @@ jobs:
             - project
             - test
   login:  
-    machine:
-      image: << pipeline.parameters.machine_image >>
+    docker:
+      image: << pipeline.parameters.docker_image >>
     steps:
       - run-sample:
           sample: "mvc-login"
