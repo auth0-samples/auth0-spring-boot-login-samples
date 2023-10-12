@@ -1,8 +1,8 @@
 version: 2.1
 parameters:
-  docker_image:
+  machine_image:
     type: string
-    default: 'cimg/openjdk:17.0.8'
+    default: 'ubuntu-2204:2023.07.2'
 commands:
   run-sample:
     description: "Build and run the sample"
@@ -79,8 +79,8 @@ commands:
           path: /tmp/out
 jobs:
   checkout:
-    docker:
-      image: << pipeline.parameters.docker_image >>
+    machine:
+      image: << pipeline.parameters.machine_image >>
     steps:
       - checkout
       - run:
@@ -92,8 +92,8 @@ jobs:
             - project
             - test
   login:  
-    docker:
-      image: << pipeline.parameters.docker_image >>
+    machine:
+      image: << pipeline.parameters.machine_image >>
     steps:
       - run-sample:
           sample: "mvc-login"
