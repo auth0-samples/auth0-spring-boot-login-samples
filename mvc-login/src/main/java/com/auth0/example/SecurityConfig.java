@@ -24,12 +24,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests((requests) -> requests
+        http
+            .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/images/**").permitAll()
-                    .anyRequest().authenticated())
-                .oauth2Login(withDefaults())
-                .logout(logout -> logout.addLogoutHandler(logoutHandler()))
-                .build();
+                .anyRequest().authenticated()
+            )
+            .oauth2Login(withDefaults())
+            .logout(logout -> logout
+                .addLogoutHandler(logoutHandler()));
+        return http.build();
     }
 
     private LogoutHandler logoutHandler() {

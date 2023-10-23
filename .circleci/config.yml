@@ -2,7 +2,7 @@ version: 2.1
 parameters:
   machine_image:
     type: string
-    default: 'ubuntu-2204:2023.07.2'
+    default: 'ubuntu-latest'
 commands:
   run-sample:
     description: "Build and run the sample"
