@@ -14,7 +14,6 @@ import java.io.IOException;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     @Value("${okta.oauth2.issuer}")
