@@ -45,9 +45,11 @@
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
-                            <a id="qsLogoutBtn" href="javascript: document.logoutForm.submit()" class="dropdown-item">
-                                <i class="fas fa-power-off mr-3"></i> Log out
-                            </a>
+                            <form name="logoutForm" th:action="@{/logout}" method="post">
+                                <button type="submit" id="qsLogoutBtn" class="dropdown-item">
+                                    <i class="fas fa-power-off mr-3"></i> Log out
+                                </button>
+                            </form>
                         </div>
                     </li>
                     <li th:unless="${profile}" class="nav-item">
@@ -71,8 +73,11 @@
                     </li>
 
                     <li>
-                        <i class="fas fa-power-off mr-3"></i>
-                        <a href="javascript: document.logoutForm.submit()"> Log out</a>
+                        <form name="logoutForm" th:action="@{/logout}" method="post">
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-power-off mr-3"></i> Log out
+                            </button>
+                        </form>
                     </li>
                 </ul>
 
@@ -83,9 +88,6 @@
                 <!-- /Responsive login button -->
             </div>
         </div>
-        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-            <input hidden type="submit" value="Log Out" />
-        </form>
     </nav>
 </div>
 </html>
