@@ -1,41 +1,46 @@
 package com.auth0.example;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@EnableWebSecurity
+import java.io.IOException;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@Configuration
 public class SecurityConfig {
 
-    private final LogoutHandler logoutHandler;
-
-    public SecurityConfig(LogoutHandler logoutHandler) {
-        this.logoutHandler = logoutHandler;
-    }
+    @Value("${okta.oauth2.issuer}")
+    private String issuer;
+    @Value("${okta.oauth2.client-id}")
+    private String clientId;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                // allow all users to access the home pages and the static images directory
-                .mvcMatchers("/", "/images/**").permitAll()
-                // all other requests must be authenticated
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/", "/images/**").permitAll()
                 .anyRequest().authenticated()
-                .and().oauth2Login()
-                .and().logout()
-                // handle logout requests at /logout path
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                // customize logout handler to log out of Auth0
-                .addLogoutHandler(logoutHandler);
+            )
+            .oauth2Login(withDefaults())
+            .logout(logout -> logout
+                .addLogoutHandler(logoutHandler()));
         return http.build();
     }
 
-// If using HS256, create a Bean to specify the HS256 should be used. By default, RS256 will be used.
-//    @Bean
-//    public JwtDecoderFactory<ClientRegistration> idTokenDecoderFactory() {
-//        OidcIdTokenDecoderFactory idTokenDecoderFactory = new OidcIdTokenDecoderFactory();
-//        idTokenDecoderFactory.setJwsAlgorithmResolver(clientRegistration -> MacAlgorithm.HS256);
-//        return idTokenDecoderFactory;
-//    }
+    private LogoutHandler logoutHandler() {
+        return (request, response, authentication) -> {
+            try {
+                String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + baseUrl);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
 }

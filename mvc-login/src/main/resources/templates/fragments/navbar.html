@@ -32,7 +32,7 @@
 
                     <!-- Login button: show if NOT authenticated -->
                     <li sec:authorize="!isAuthenticated()" class="nav-item">
-                        <a th:href="@{/oauth2/authorization/auth0}" id="qsLoginBtn" class="btn btn-primary btn-margin">Login</a>
+                        <a th:href="@{/oauth2/authorization/okta}" id="qsLoginBtn" class="btn btn-primary btn-margin">Login</a>
                     </li>
                     <!-- / Login button -->
 
@@ -53,9 +53,11 @@
                             <a href="/profile" class="dropdown-item dropdown-profile">
                                 <i class="fas fa-user mr-3"></i> Profile
                             </a>
-                            <a id="qsLogoutBtn" th:href="@{/logout}" class="dropdown-item">
-                                <i class="fas fa-power-off mr-3"></i> Log out
-                            </a>
+                            <form name="logoutForm" th:action="@{/logout}" method="post">
+                                <button type="submit" id="qsLogoutBtn" class="dropdown-item">
+                                    <i class="fas fa-power-off mr-3"></i> Log out
+                                </button>
+                            </form>
                         </div>
                     </li>
                     <!-- /Fullsize dropdown -->
@@ -64,7 +66,7 @@
 
                 <!-- Responsive login button: show if NOT authenticated -->
                 <ul sec:authorize="!isAuthenticated()" class="navbar-nav d-md-none">
-                    <a th:href="@{/oauth2/authorization/auth0}" id="qsLoginBtn" class="btn btn-primary btn-block">Login</a>
+                    <a th:href="@{/oauth2/authorization/okta}" id="qsLoginBtn" class="btn btn-primary btn-block">Login</a>
                 </ul>
                 <!-- /Responsive login button -->
 
@@ -82,10 +84,12 @@
                         <i class="fas fa-user mr-3"></i>
                         <a th:href="@{/profile}"> Profile</a>
                     </li>
-
                     <li>
-                        <i class="fas fa-power-off mr-3"></i>
-                        <a th:href="@{/logout}"> Log out</a>
+                        <form name="logoutForm" th:action="@{/logout}" method="post">
+                            <button type="submit" class="dropdown-item">
+                                <i class="fas fa-power-off mr-3"></i> Log out
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>
