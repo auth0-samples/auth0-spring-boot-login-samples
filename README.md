@@ -1,9 +1,5 @@
 # Spring Boot Login Samples
 
-[![CircleCI](https://circleci.com/gh/auth0-samples/auth0-spring-boot-login-samples.svg?style=svg)](https://circleci.com/gh/auth0-samples/auth0-spring-boot-login-samples)
-
-https://circleci.com/gh/auth0-samples/auth0-spring-boot-login-samples.svg?style=svg
-
 This repository contains samples demonstrating how to add authentication with Auth0 to your Spring Boot application.
 
 - [MVC/Servlet sample](./mvc-login)
