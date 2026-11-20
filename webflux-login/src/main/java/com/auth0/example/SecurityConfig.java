@@ -50,7 +50,7 @@ public class SecurityConfig {
         // Build the URL to log the user out of Auth0 and redirect them to the home page.
         // URL will look like https://YOUR-DOMAIN/v2/logout?clientId=YOUR-CLIENT-ID&returnTo=http://localhost:3000
         String logoutUrl = UriComponentsBuilder
-                .fromHttpUrl(issuer + "v2/logout?client_id={clientId}&returnTo={returnTo}")
+                .fromUriString(issuer + "v2/logout?client_id={clientId}&returnTo={returnTo}")
                 .encode()
                 .buildAndExpand(clientId, returnTo)
                 .toUriString();
